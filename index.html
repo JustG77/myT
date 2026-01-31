@@ -14,7 +14,6 @@
       overflow: hidden;
       position: relative;
     }
-
     .card {
       background: rgba(255,255,255,0.25);
       padding: 30px;
@@ -24,7 +23,6 @@
       position: relative;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-
     button {
       margin: 10px;
       padding: 14px 26px;
@@ -36,11 +34,9 @@
       color: white;
       transition: transform 0.2s ease;
     }
-
     button:hover {
       transform: scale(1.05);
     }
-
     #answers {
       display: flex;
       justify-content: center;
@@ -48,14 +44,12 @@
       flex-wrap: wrap;
       position: relative;
     }
-
     .heart {
       position: absolute;
       font-size: 26px;
       animation: floatUp 2s forwards;
       pointer-events: none;
     }
-
     @keyframes floatUp {
       0% { opacity: 1; transform: translateY(0); }
       100% { opacity: 0; transform: translateY(-160px); }
@@ -108,10 +102,10 @@
     }
 
     if (index < questions.length) {
-  questionEl.innerText = questions[index];
-  index++;
-} else {
-document.querySelector(".card").innerHTML = `
+      questionEl.innerText = questions[index];
+      index++;
+    } else {
+      document.querySelector(".card").innerHTML = `
         <h2>Te iubesc 🤍</h2>
         <p>
           Am vrut să-ți spun altfel cât de mult însemni pentru mine.<br>
@@ -132,11 +126,9 @@ document.querySelector(".card").innerHTML = `
     }
   }
 
-
   daBtn.addEventListener("click", next);
   nuBtn.addEventListener("click", next);
 
-  // NU fuge de cursor
   nuBtn.addEventListener("mouseenter", () => {
     const maxX = window.innerWidth - nuBtn.offsetWidth - 20;
     const maxY = window.innerHeight - nuBtn.offsetHeight - 20;
@@ -163,3 +155,4 @@ document.querySelector(".card").innerHTML = `
 
 </body>
 </html>
+
