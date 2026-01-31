@@ -121,128 +121,106 @@ const questions = [
 "Îți este dor des de mine? 🥹",
 "Îți place când îți trimit poze cu mine fără să îmi ceri? 🤭 ", 
 "Te-ai urca pe scară ca să-mi dai cu tigaia aia nouă în cap? 🫣",
+"Crezi că dacă aș știi cât de mult mă iubești mi s-ar urca la cap? 🤭",
+"Te simți puternică când mă ameninți cu bătaia?💪",
+"Adori să mă tachinezi? 🫣",
+"Te fac sa te simți iubită, apreciată, dorită și specială? ❤️",
+"Îți place când sunt autoritar și mă impun? 🤭",
 "Mă faci gelos intenționat? 🫣",
 "Îți place când sunt gelos și posesiv? 😏❤️",
 "Încă consideri că sunt bărbatul vieții tale? 🫣❤️",
 "Iubito, după tot ce a fost, cât de mult mă mai iubești?"
 ];
 
-let index = 0;
-let musicStarted = false;
+{
+    type: "text",
+    text: `Ai apărut în viața mea într-un moment dificil, nu știam că o să ajungi să însemni atât de mult pentru mine, dar ..`
+  },
+  {
+    type: "text",
+    text: `Îți mulțumesc pentru că ai văzut în mine ceva frumos când totul în mine era doar cenușă, iar eu nu am văzut deloc o scorpie cu ochii albaștri.`
+  },
+  {
+    type: "text",
+    text: `Datorită ție am învățat ce înseamnă cu adevărat iubirea.`
+  },
+  {
+    type: "text",
+    text: `Datorită ție am învățat să fiu mai deschis, să îmi dau voie să fiu vulnerabil.`
+  },
+  {
+    type: "text",
+    text: `Te iubesc tot mai mult pe zi ce trece și mă emoționez foarte tare când îmi spui că sunt bărbatul tău 🥹❤️`
+  },
+  {
+    type: "text",
+    text: `Știu că nu sunt perfect și am multe filme în cap, dar vreau să fiu mai bun pe zi ce trece pentru noi, am nevoie doar de tine pentru asta ❤️`
+  },
+
+  {
+    type: "finalMessage"
+  }
+];
+
+let stepIndex = 0;
 
 const questionEl = document.getElementById("question");
-const answersDiv = document.getElementById("answers");
-const daBtn = document.getElementById("daBtn");
-const nuBtn = document.getElementById("nuBtn");
-const music = document.getElementById("music");
+const answersEl = document.getElementById("answers");
 
-function createFloatItem(symbol) {
-    const item = document.createElement("div");
-    item.className = "floatItem";
-    item.innerText = symbol;
-    item.style.left = Math.random() * (window.innerWidth - 30) + "px";
-    item.style.fontSize = (20 + Math.random() * 25) + "px";
-    item.style.animationDuration = (4 + Math.random() * 4) + "s";
-    document.body.appendChild(item);
-    setTimeout(() => item.remove(), 6000);
-}
+function renderStep() {
+  const step = steps[stepIndex];
+  answersEl.innerHTML = "";
 
-setInterval(() => {
-    const symbols = ["❤️","🌸","💐"];
-    createFloatItem(symbols[Math.floor(Math.random()*symbols.length)]);
-}, 400);
-
-function createHeart(element, scale = 1) {
-    const heart = document.createElement("div");
-    heart.className = "floatItem";
-    heart.innerText = "❤️";
-    const rect = element.getBoundingClientRect();
-    heart.style.left = rect.left + rect.width / 2 + "px";
-    heart.style.top = rect.top + "px";
-    heart.style.transform = `scale(${scale})`;
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 2000);
-}
-
-function nextQuestion(sliderValue) {
-    index++;
-
-    if (!musicStarted) {
-        music.play();
-        musicStarted = true;
-    }
-
-    if (index < questions.length) {
-        questionEl.innerText = questions[index];
-
-        if (index === questions.length - 1) {
-            answersDiv.innerHTML = `
-                <input type="range" min="0" max="100000000" value="50000000" id="slider">
-                <span id="sliderValue">50000000</span>
-                <button id="nextBtn">Next</button>
-            `;
-            const slider = document.getElementById("slider");
-            const sliderValueEl = document.getElementById("sliderValue");
-            slider.addEventListener("input", () => {
-                sliderValueEl.innerText = slider.value;
-            });
-            document.getElementById("nextBtn").addEventListener("click", () => showSpecialMessage());
-        } else {
-            answersDiv.innerHTML = `<button id="daBtn">DA</button><button id="nuBtn">NU</button>`;
-            document.getElementById("daBtn").addEventListener("click", () => {
-                createHeart(document.getElementById("daBtn"), 1.2);
-                nextQuestion(1);
-            });
-            const nuBtnDynamic = document.getElementById("nuBtn");
-            nuBtnDynamic.addEventListener("click", () => nextQuestion(0));
-            nuBtnDynamic.addEventListener("mouseenter", () => {
-                const maxX = window.innerWidth - nuBtnDynamic.offsetWidth - 20;
-                const maxY = window.innerHeight - nuBtnDynamic.offsetHeight - 20;
-                nuBtnDynamic.style.position = "absolute";
-                nuBtnDynamic.style.left = Math.random() * maxX + "px";
-                nuBtnDynamic.style.top = Math.random() * maxY + "px";
-            });
-        }
-    }
-}
-
-function showSpecialMessage() {
-    document.querySelector(".card").innerHTML = `
-        <p style="font-size:20px;line-height:1.5;">
-        Am vrut să-ți spun altfel cât de mult însemni pentru mine.<br>
-        Alături de tine am învățat să iubesc cu adevărat și să mă las iubit.<br>
-        Distanța nu a micșorat dragostea pe care o simt pentru tine, doar a făcut-o mai puternică. ❤️<br>
-        Mulțumesc că după toate greutățile prin care am trecut încă ești aici și ești a mea. 💖
-        </p>
-        <button id="nextSpecial">Încă ceva...</button>
+  if (step.type === "question") {
+    questionEl.innerText = step.text;
+    answersEl.innerHTML = `
+      <button onclick="nextStep()">DA</button>
+      <button onclick="nextStep()">NU</button>
     `;
-    document.getElementById("nextSpecial").addEventListener("click", () => {
-        document.querySelector(".card").innerHTML = `
-        <h2>Ne vedem curând ❤️</h2>
-        <button onclick="window.location.reload()">Începe din nou</button>
-        `;
-    });
+  }
+
+  if (step.type === "slider") {
+    questionEl.innerText = step.text;
+    answersEl.innerHTML = `
+      <input type="range" min="${step.min}" max="${step.max}" value="${step.max / 2}" id="loveSlider">
+      <div id="sliderValue">${step.max / 2}</div>
+      <button onclick="nextStep()">Next</button>
+    `;
+    const slider = document.getElementById("loveSlider");
+    const value = document.getElementById("sliderValue");
+    slider.oninput = () => value.innerText = slider.value;
+  }
+
+  if (step.type === "text") {
+    questionEl.innerText = step.text;
+    answersEl.innerHTML = `<button onclick="nextStep()">Next</button>`;
+  }
+
+  if (step.type === "finalMessage") {
+    questionEl.innerHTML = `
+      Am vrut să-ți spun altfel cât de mult însemni pentru mine.<br><br>
+      Alături de tine am învățat să iubesc cu adevărat și să mă las iubit.<br>
+      Distanța nu a micșorat dragostea pe care o simt pentru tine,
+      doar a făcut-o mai puternică. ❤️<br><br>
+      Mulțumesc că după toate greutățile prin care am trecut
+      încă ești aici și ești a mea. 💖
+    `;
+    answersEl.innerHTML = `<button onclick="showLast()">Încă ceva...</button>`;
+  }
 }
 
-daBtn.addEventListener("click", () => {
-    createHeart(daBtn, 1.2);
-    nextQuestion(1);
-});
-nuBtn.addEventListener("click", () => nextQuestion(0));
-nuBtn.addEventListener("mouseenter", () => {
-    const maxX = window.innerWidth - nuBtn.offsetWidth - 20;
-    const maxY = window.innerHeight - nuBtn.offsetHeight - 20;
-    nuBtn.style.position = "absolute";
-    nuBtn.style.left = Math.random() * maxX + "px";
-    nuBtn.style.top = Math.random() * maxY + "px";
-});
+function nextStep() {
+  stepIndex++;
+  renderStep();
+}
 
-});
+function showLast() {
+  questionEl.innerText = "Ne vedem curând ❤️";
+  answersEl.innerHTML = `<button onclick="location.reload()">Începe din nou</button>`;
+}
+
+renderStep();
 </script>
-
-</body>
-</html>
-
 
 
 
