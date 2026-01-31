@@ -32,6 +32,7 @@ body {
     line-height: 1.6;
     margin-bottom: 25px;
     color: black;
+    min-height: 60px;
 }
 
 button {
@@ -51,7 +52,7 @@ button:hover {
 }
 
 #nuBtn {
-    position: relative;
+    position: absolute;
     transition: all 0.3s ease;
 }
 
@@ -61,6 +62,7 @@ button:hover {
     gap: 20px;
     flex-wrap: wrap;
     position: relative;
+    height: 120px;
 }
 
 input[type=range] {
@@ -115,6 +117,7 @@ input[type=range] {
 
 <script>
 const steps = [
+  { type: "intro", text: "Ești pregătită? 💖" },
   { type: "question", text: "Îți amintești prima noastră conversație? 🥹" },
   { type: "question", text: "Crezi că avem o conexiune specială? ❤️" },
   { type: "question", text: "Reușesc în fiecare zi să te fac să zâmbești? ❤️" },
@@ -183,6 +186,27 @@ function renderStep() {
 
     if (!musicStarted && stepIndex > 0) { music.play(); musicStarted = true; }
 
+    if(step.type === "intro") {
+        questionEl.innerText = step.text;
+        questionEl.classList.remove("fade-slide");
+        void questionEl.offsetWidth;
+        questionEl.classList.add("fade-slide");
+
+        const startBtn = document.createElement("button");
+        startBtn.innerText = "DA";
+        startBtn.addEventListener("click", nextStep);
+
+        const nuBtn = document.createElement("button");
+        nuBtn.innerText = "NU";
+        nuBtn.id = "nuBtn";
+        nuBtn.addEventListener("click", () => alert("Poți începe doar dacă ești pregătită 😘"));
+
+        answersEl.appendChild(startBtn);
+        answersEl.appendChild(nuBtn);
+        // poziție random pentru NU
+        moveNuRandom(nuBtn);
+    }
+
     if(step.type === "question") {
         questionEl.innerText = step.text;
         questionEl.classList.remove("fade-slide");
@@ -198,18 +222,10 @@ function renderStep() {
         nuBtn.id = "nuBtn";
         nuBtn.addEventListener("click", nextStep);
 
-        // MOVE NU BUTTON SLIGHTLY ON HOVER / TOUCH
-        nuBtn.addEventListener("mouseover", () => {
-            const maxX = 20;
-            const maxY = 10;
-            const randomX = (Math.random() - 0.5) * 2 * maxX;
-            const randomY = (Math.random() - 0.5) * 2 * maxY;
-            nuBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
-        });
-        nuBtn.addEventListener("mouseout", () => { nuBtn.style.transform = `translate(0px,0px)`; });
-
         answersEl.appendChild(daBtn);
         answersEl.appendChild(nuBtn);
+
+        moveNuRandom(nuBtn);
     }
 
     if(step.type === "slider") {
@@ -267,6 +283,7 @@ function renderStep() {
     }
 }
 
+// FUNCTII
 function nextStep() { stepIndex++; renderStep(); }
 
 function showLast() {
@@ -277,11 +294,22 @@ function showLast() {
     answersEl.innerHTML = `<button onclick="location.reload()">Începe din nou</button>`;
 }
 
+// FUNCTIE PENTRU POZITIE RANDOM NU
+function moveNuRandom(nuBtn){
+    const maxX = window.innerWidth - 120;
+    const maxY = window.innerHeight - 200;
+    const randomX = Math.random() * maxX;
+    const randomY = Math.random() * maxY;
+    nuBtn.style.left = randomX + "px";
+    nuBtn.style.top = randomY + "px";
+}
+
 renderStep();
 </script>
 
 </body>
 </html>
+
 
 
 
