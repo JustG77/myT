@@ -9,7 +9,7 @@
     font-family: Arial, sans-serif;
     text-align: center;
     color: white;
-    padding-top: 60px;
+    padding-top: 40px;
     height: 100vh;
     overflow: hidden;
     position: relative;
@@ -27,24 +27,26 @@
   }
 
   #question {
-    font-size: 22px;
+    font-size: 24px;
     line-height: 1.4;
+    margin-bottom: 25px;
   }
 
   button {
     margin: 10px;
-    padding: 16px 32px;
-    font-size: 19px;
+    padding: 18px 36px;
+    font-size: 20px;
     border: none;
-    border-radius: 30px;
+    border-radius: 35px;
     cursor: pointer;
     background: #ff4d6d;
     color: white;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
   button:hover {
-    transform: scale(1.05);
+    transform: scale(1.08);
+    box-shadow: 0 0 15px rgba(255,255,255,0.6);
   }
 
   #answers {
@@ -63,17 +65,18 @@
   }
 
   @keyframes floatUp {
-    0% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(-160px); }
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    50% { transform: translateY(-80px) scale(1.3); }
+    100% { opacity: 0; transform: translateY(-160px) scale(1); }
   }
 
   @media (max-width: 480px) {
     #question {
-      font-size: 24px;
+      font-size: 26px;
     }
     button {
-      font-size: 20px;
-      padding: 18px 34px;
+      font-size: 22px;
+      padding: 20px 38px;
     }
   }
 </style>
@@ -117,19 +120,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const nuBtn = document.getElementById("nuBtn");
   const music = document.getElementById("music");
 
-  function createHeart(element) {
+  function createHeart(element, scale = 1) {
     const heart = document.createElement("div");
     heart.className = "heart";
     heart.innerText = "❤️";
     const rect = element.getBoundingClientRect();
     heart.style.left = rect.left + rect.width / 2 + "px";
     heart.style.top = rect.top + "px";
+    heart.style.transform = `scale(${scale})`;
     document.body.appendChild(heart);
     setTimeout(() => heart.remove(), 2000);
   }
 
   function nextQuestion() {
-    createHeart(daBtn);
+    createHeart(daBtn, 1.2);
 
     if (!musicStarted) {
       music.play();
@@ -141,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
       index++;
     } else {
       document.querySelector(".card").innerHTML = `
-        <h2>Te iubesc 🤍</h2>
+        <h2>Te iubesc ❤️</h2>
         <p>
           Am vrut să-ți spun altfel cât de mult însemni pentru mine.<br>
           Alături de tine am învățat să iubesc cu adevărat și să mă las iubit.<br>
@@ -154,7 +158,6 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("nextBtn").addEventListener("click", () => {
         document.querySelector(".card").innerHTML = `
           <h2>Ne vedem curând ❤️</h2>
-          <p>Abia aștept să fim împreună!</p>
           <button onclick="window.location.reload()">Începe din nou</button>
         `;
 
@@ -164,9 +167,10 @@ document.addEventListener("DOMContentLoaded", () => {
           heart.innerText = "❤️";
           heart.style.left = Math.random() * (window.innerWidth - 30) + "px";
           heart.style.top = window.innerHeight + "px";
-          heart.style.fontSize = (20 + Math.random() * 20) + "px";
+          heart.style.fontSize = (22 + Math.random() * 25) + "px";
           heart.style.position = "fixed";
           heart.style.zIndex = "1000";
+          heart.style.transform = `rotate(${Math.random()*360}deg) scale(${0.8+Math.random()*0.7})`;
           document.body.appendChild(heart);
 
           let topPos = window.innerHeight;
@@ -179,13 +183,14 @@ document.addEventListener("DOMContentLoaded", () => {
             else heart.remove();
           }
           floatUp();
-        }, 300);
+        }, 250);
       });
     }
   }
 
   daBtn.addEventListener("click", nextQuestion);
   nuBtn.addEventListener("click", nextQuestion);
+
   nuBtn.addEventListener("mouseenter", () => {
     const maxX = window.innerWidth - nuBtn.offsetWidth - 20;
     const maxY = window.innerHeight - nuBtn.offsetHeight - 20;
@@ -199,5 +204,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
 
 
